@@ -2,9 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "use": "@now/static-build",
-      "src": "package.json",
-      "config": { "distDir": "/" }
+      "use": "@now/static",
+      "src": "index.html"
+    },
+    {
+      "use": "@now/static",
+      "src": "{css,js,lib,plugin}/**/*.{css,html,js,woff,eot,ttf,md}"
     }
   ]
 }
