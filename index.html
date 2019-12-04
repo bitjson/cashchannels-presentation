@@ -1,49 +1,447 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>reveal.js</title>
+    <title>CashChannels: Recurring Payments for Bitcoin</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,500,700|Fira+Sans:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link rel="stylesheet" href="css/theme/bitauth.css" />
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css" />
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? 'css/print/pdf.css'
+        : 'css/print/paper.css';
+      document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-90982484-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-90982484-1');
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>CashChannels</h2>
+          <h4>Recurring Payments for Bitcoin</h4>
+          <p><br /></p>
+          <p>
+            Jason Dreyzehner &bullet;
+            <a target="_blank" href="https://twitter.com/bitjson">@bitjson</a>
+          </p>
+          <p><br /></p>
+          <small>
+            <a
+              target="_blank"
+              href="https://gist.github.com/bitjson/ca13abf369b5ecace6437cb86afa331f"
+              >GitHub Gist &rarr;</a
+            >
+            <br />
+            <a
+              target="_blank"
+              href="https://blog.bitjson.com/cashchannels-recurring-payments-for-bitcoin-cash-3b274fbfa6e2"
+              >Blog Post &rarr;</a
+            >
+            <br />
+            <br />
+            <a target="_blank" href="https://bitauth.com">bitauth.com</a>
+          </small>
+        </section>
+        <section>
+          <h2>Poll</h2>
+          <p>Heard about Bitcoin Script before this talk?</p>
+          <p class="fragment">Tried to learn Bitcoin Script?</p>
+          <p class="fragment">Written a custom locking/unlocking script?</p>
+        </section>
 
-		<script src="js/reveal.js"></script>
+        <section>
+          <h4>Part 1</h4>
+          <h2>Storing Bitcoin</h2>
+        </section>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+        <section>
+          <h3>Common Security Options</h3>
+          <ul>
+            <br />
+            <li>Single device (&ldquo;P2PKH&rdquo;)</li>
+            <br />
+            <li>Multi-device (&ldquo;P2SH Multisig&rdquo;)</li>
+            <br />
+          </ul>
+          <p class="fragment">Something else?</p>
+        </section>
+
+        <section>
+          <h4>Example – High-Security Business Wallet</h4>
+          <br />
+          <ul>
+            <li>2-of-2 – normally each co-owner must approve transactions.</li>
+            <br />
+            <li>
+              Recovery – if either loses their wallet, a trusted lawyer can
+              approve transactions.
+            </li>
+            <br />
+            <li>
+              <b>
+                *Lawyer can't approve transactions until 30 days later.
+              </b>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Bitcoin Script</h3>
+          <br />
+          <p>
+            A programming language for authentication.
+          </p>
+        </section>
+
+        <section>
+          <h4>Part 2</h4>
+          <h2>Bitcoin Transactions</h2>
+        </section>
+
+        <section>
+          <h3>Transactions</h3>
+          <br />
+          <p>some addresses &rarr; other addresses</p>
+          <br />
+          <p class="fragment">inputs &rarr; outputs</p>
+        </section>
+
+        <section>
+          <h3>Transactions: Deconstructed</h3>
+          <small class="code tx" style="word-break: break-all">
+            <span class="tx-version">01000000</span
+            ><span class="tx-input-count">01</span
+            ><span class="tx-outpoint-hash"
+              >bdd84c0a10482ee004977ae99cdf7109b9b640f21d54cccafef1315c9d346a81</span
+            ><span class="tx-outpoint-index">01000000</span
+            ><span class="tx-unlocking-script"
+              >6b483045022100c1f209db2e8efb2e90ef054bd100f4c2badba4ce5f0710141cf19969bc63065c02203f34b4c6dd8f19355dc457dbd01273f006faab8abf29b670debcdc1e3f551d0a412103adf90e9560aa579e128a64f7c4f024fe32031a9f7550f6f6e511db3f8e062a08</span
+            ><span class="tx-sequence-number">00000000</span
+            ><span class="tx-output-count">03</span
+            ><span class="tx-value">c8cf030000000000</span
+            ><span class="tx-locking-script"
+              >1976a914deedd3c18efe2b2c6838e8bacca056cd4aacf8d388ac</span
+            ><span class="tx-value">c8cf030000000000</span
+            ><span class="tx-locking-script"
+              >1976a914bc07ca234f8ff0dbe26513ee093312aa4f21be0a88ac</span
+            ><span class="tx-value">0000000000000000</span
+            ><span class="tx-locking-script"
+              >0e6a04010101010762697461757468</span
+            ><span class="tx-locktime">00000000</span>
+          </small>
+          <br /><br />
+        </section>
+
+        <section>
+          <small class="code tx-spread" style="word-break: break-all">
+            <span class="tx-version"
+              >01000000 <span class="comment">&larr; version</span></span
+            >
+            <span class="tx-input-count"
+              >01 <span class="comment">&larr; number of inputs</span></span
+            >
+            <span class="tx-outpoint-hash"
+              >bdd84c0a10482ee004977ae99cdf7109b9b640f21d54cccafef1315c9d346a81
+              <span class="comment">&larr; txid 1</span></span
+            >
+            <span class="tx-outpoint-index"
+              >01000000
+              <span class="comment">&larr; outpoint index 1</span></span
+            >
+            <span class="tx-unlocking-script"
+              >6b483045022100c1f209db2e8efb2e90ef054bd100f4c2badba4ce5f0710141cf19969bc63065c02203f34b4c6dd8f19355dc457dbd01273f006faab8abf29b670debcdc1e3f551d0a412103adf90e9560aa579e128a64f7c4f024fe32031a9f7550f6f6e511db3f8e062a08
+              <span class="comment">&larr; unlocking script 1</span></span
+            >
+            <span class="tx-sequence-number"
+              >00000000
+              <span class="comment">&larr; sequence number 1</span></span
+            >
+            <span class="tx-output-count"
+              >03 <span class="comment">&larr; number of outputs</span></span
+            >
+            <span class="tx-value"
+              >c8cf030000000000
+              <span class="comment"
+                >&larr; value 1 (249,800 satoshis)</span
+              ></span
+            >
+            <span class="tx-locking-script"
+              >1976a914deedd3c18efe2b2c6838e8bacca056cd4aacf8d388ac
+              <span class="comment">&larr; locking script 1</span></span
+            >
+            <span class="tx-value"
+              >c8cf030000000000
+              <span class="comment">&larr; value 2</span></span
+            >
+            <span class="tx-locking-script"
+              >1976a914bc07ca234f8ff0dbe26513ee093312aa4f21be0a88ac
+              <span class="comment">&larr; locking script 2</span></span
+            >
+            <span class="tx-value"
+              >0000000000000000
+              <span class="comment">&larr; value 3</span></span
+            >
+            <span class="tx-locking-script"
+              >0e6a04010101010762697461757468
+              <span class="comment">&larr; locking script 3</span></span
+            >
+            <span class="tx-locktime"
+              >00000000 <span class="comment">&larr; locktime</span></span
+            >
+          </small>
+          <br /><br />
+        </section>
+
+        <section>
+          <h3>Decoding Locking Script 1</h3>
+          <div>
+            <p>
+              <small class="code lock">
+                <span class="bytecode">
+                  76a914deedd3c18efe2b2c6838e8bacca056cd4aacf8d388ac
+                </span></small
+              >
+            </p>
+          </div>
+          <div class="fragment">
+            <p>&darr;</p>
+            <p>
+              <small class="code lock">
+                <span class="bytecode">76 a9 14</span>
+                <span class="bytes"
+                  >deedd3c18efe2b2c6838e8bacca056cd4aacf8d3</span
+                >
+                <span class="bytecode">88</span>
+                <span class="bytecode">ac</span>
+              </small>
+            </p>
+          </div>
+          <div class="fragment">
+            <p>&darr;</p>
+            <p>
+              <small class="code lock">
+                <span class="standard">OP_DUP OP_HASH160 OP_PUSHBYTES_20</span>
+                <span class="bytes">(20 bytes)</span>
+                <span class="standard">OP_EQUALVERIFY</span>
+                <span class="checksig">OP_CHECKSIG</span>
+              </small>
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h3>Visualizing a Stack</h3>
+          <br /><br />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="610.1"
+            height="171"
+            style="transform: scale(1.4);"
+          >
+            <style>
+              .st0 {
+                fill: none;
+                stroke: #66585c;
+                stroke-width: 5;
+                stroke-miterlimit: 10;
+              }
+              .st1 {
+                fill: #fff;
+              }
+              .st2 {
+                fill: #0984e3;
+              }
+            </style>
+            <path class="st0" d="M117 70.7v38.4H2.5V70.7" />
+            <path
+              class="st1"
+              d="M212.7 148.7l2 3.1-9.1 5.3 9.1 5.2-2 3.2-10.9-6.8v-3.2l10.9-6.8zM228.4 162.5h3.6v3.4h-12.6v-3.4h4.7v-11.7l-4 2.5-1.9-3.1 6.3-3.8h3.9v16.1zM237.3 148.7l10.9 6.8v3.2l-10.9 6.8-2-3 9.1-5.3-9.1-5.2 2-3.3z"
+            />
+            <path class="st0" d="M282.2 70.7v38.4H167.7V70.7" />
+            <path class="st2" d="M175.3 53.6h99.2v47.7h-99.2z" />
+            <path
+              class="st1"
+              d="M229.1 84.5h3.8V88h-13.2v-3.5h4.9V72.2l-4.2 2.6-2-3.2 6.6-4h4.1v16.9z"
+            />
+            <path
+              class="st1"
+              d="M374.9 148.7l2 3.1-9.1 5.3 9.1 5.2-2 3.2-10.9-6.8v-3.2l10.9-6.8zM390.2 146.7c1 .5 1.8 1.2 2.3 2 .5.8.8 1.8.8 2.8 0 1.1-.2 2.1-.7 3.1s-1.3 2.1-2.4 3.3c-1.1 1.2-2.7 2.7-4.7 4.5h8.3l-.5 3.4h-12.9v-3.1c2.3-2.2 4-4 5.2-5.2s2-2.3 2.5-3.2c.5-.9.8-1.7.8-2.5s-.2-1.4-.7-1.9-1.1-.7-1.9-.7c-.7 0-1.4.2-1.9.5s-1.1.8-1.6 1.5l-2.7-2c.8-1.1 1.7-1.9 2.8-2.5s2.4-.9 3.9-.9c1.1.1 2.4.4 3.4.9zM399.5 148.7l10.9 6.8v3.2l-10.9 6.8-2-3 9.1-5.3-9.1-5.2 2-3.3z"
+            />
+            <path class="st0" d="M444.5 70.7v38.4H329.9V70.7" />
+            <path
+              class="st2"
+              d="M337.6 53.6h99.2v47.7h-99.2zM337.6 0h99.2v47.7h-99.2z"
+            />
+            <path
+              class="st1"
+              d="M391.4 84.5h3.8V88H382v-3.5h4.9V72.2l-4.2 2.6-2-3.2 6.6-4h4.1v16.9zM390.9 13.9a5 5 0 0 1 2.4 2.1c.5.9.8 1.9.8 2.9 0 1.1-.3 2.2-.8 3.2s-1.3 2.2-2.5 3.5c-1.2 1.3-2.8 2.9-5 4.8h8.7L394 34h-13.5v-3.3c2.4-2.3 4.2-4.1 5.4-5.5 1.2-1.3 2.1-2.4 2.6-3.3.5-.9.8-1.8.8-2.6s-.2-1.5-.7-2c-.5-.5-1.1-.7-2-.7-.8 0-1.4.2-2 .5a5 5 0 0 0-1.7 1.6l-2.8-2.1c.8-1.1 1.8-2 2.9-2.6 1.1-.6 2.5-.9 4-.9 1.6 0 2.9.3 3.9.8z"
+            />
+            <path
+              class="st1"
+              d="M514.1 163.6c-1.3 1.8-3.3 2.7-5.8 2.7s-4.4-.9-5.8-2.7c-1.3-1.8-2-4.3-2-7.5s.7-5.6 2-7.5c1.3-1.8 3.3-2.7 5.8-2.7s4.4.9 5.8 2.7 2 4.3 2 7.5-.7 5.7-2 7.5zm-3.4-12.7c-.5-1.1-1.3-1.6-2.3-1.6-1.1 0-1.9.5-2.3 1.6-.5 1.1-.7 2.8-.7 5.2s.2 4.1.7 5.2c.5 1.1 1.3 1.6 2.3 1.6 1.1 0 1.9-.5 2.4-1.6s.7-2.8.7-5.2-.4-4.1-.8-5.2zM530.8 157.7c-1.4 1.1-3.2 1.7-5.6 1.7h-2.1v6.5h-4.6v-19.4h6.1c2.7 0 4.7.5 6.2 1.6s2.1 2.6 2.1 4.7-.7 3.8-2.1 4.9zm-6.2-8H523v6.4h1.8c1 0 1.9-.3 2.4-.8s.9-1.4.9-2.5c0-2.1-1.1-3.1-3.5-3.1zM534.9 171v-3.5h14v3.5h-14zM561.5 161.6h-5.7l-1 4.2H550l5.9-19.4h5.6l5.9 19.4h-4.9l-1-4.2zm-4.9-3.3h4.2l-2.1-8.6-2.1 8.6zM573.8 165.8h-5.2v-19.4h4.9c2.9 0 5.3.7 7.1 2.1 1.8 1.4 2.7 3.9 2.7 7.5-.1 6.6-3.2 9.8-9.5 9.8zm3.5-14.7c-.7-.9-1.8-1.3-3.2-1.3h-1v12.7h1c1.4 0 2.5-.5 3.2-1.4.7-1 1.1-2.6 1.1-5 .1-2.5-.3-4.1-1.1-5zM590.6 165.8h-5.2v-19.4h4.9c2.9 0 5.3.7 7.1 2.1 1.8 1.4 2.7 3.9 2.7 7.5-.1 6.6-3.2 9.8-9.5 9.8zm3.5-14.7c-.7-.9-1.8-1.3-3.2-1.3h-1v12.7h1c1.4 0 2.5-.5 3.2-1.4.7-1 1.1-2.6 1.1-5 .1-2.5-.3-4.1-1.1-5z"
+            />
+            <path class="st0" d="M607.6 70.7v38.4H493.1V70.7" />
+            <path class="st2" d="M500.7 53.6h99.2v47.7h-99.2z" />
+            <path
+              class="st1"
+              d="M553.8 67.8c1 .5 1.9 1.1 2.4 1.9.6.8.8 1.7.8 2.6 0 1.3-.4 2.3-1.1 3.1s-1.8 1.4-3.1 1.8c3.2.4 4.8 2.1 4.8 5.1 0 1.2-.3 2.2-1 3.2-.6 1-1.6 1.7-2.7 2.2s-2.6.8-4.2.8c-1.5 0-2.8-.3-4.1-.8-1.2-.5-2.3-1.3-3.1-2.3l2.6-2.4c1.1 1.3 2.5 1.9 4.2 1.9 1 0 1.9-.3 2.5-.8s.9-1.3.9-2.2c0-2-1.1-3.1-3.4-3.1h-1.9l.5-3.2h1.3c.9 0 1.7-.2 2.2-.7.6-.5.8-1.1.8-2 0-.8-.3-1.4-.8-1.8-.5-.4-1.3-.7-2.1-.7-1.5 0-2.8.6-4.1 1.8l-2.4-2.5c1.9-1.8 4.2-2.8 7-2.8 1.7.2 2.9.5 4 .9z"
+            />
+          </svg>
+          <br /><br />
+        </section>
+
+        <section>
+          <h4>Part 3</h4>
+          <h2>Simple Scripts</h2>
+        </section>
+
+        <section>
+          <h3>Demo: 1 + 2 = 3</h3>
+          <a
+            target="_blank"
+            href="https://ide.bitauth.com/import-template/eJxtT01LxDAQ_Sth8GbbJF08WFRYreBBcEU8uRJiNtjoNgnNdC9L_7sTs97MYZj3MY-XI5wlM9hRQwcDYkwd5x8O9YxDY8LIi5h4JqxHZzS64Gu0Y9xrtPVBNMXSfKXgoYKdTWZyMbsokgivR0tbb8fQMcnOWcuu2YqEHIfOJuiOSwXlKoO8ajSDinqX4SngpbBsQ-yfnWjOWU2PzX4fzLfzn6xIW7_1V_KGRkvjaaPWfZ-5k79m_9hXxXn__Lp-hCWXmmMME1rq8Qa3dw-qFfJSSUkFCmqFEhfwXsHBTun3y2L5AYkLbhI="
+            >Open in Bitauth IDE &rarr;</a
+          >
+        </section>
+        <section>
+          <h3>Demo: Single Signature (P2PKH)</h3>
+          <a
+            target="_blank"
+            href="https://ide.bitauth.com/import-template/eJylUl1r2zAU_StC9KGF2nEC27pQCmmWzSWFektSKMswiqzWWmRJSHKCCfnvu5Lz1fRxxmAd-ercc47uBl9YWrKK4D4undO23-ksuCO1K2Oqqk7703b8BpOOU-K4kpFjlRbEsWiVxG1J_Ncqia9xwSw1XPsqoBwg64gsiCmQ5fJNsOiVUKcMes-H9nxoXXJaotoyizLSRE5FWb0QnEZj1kQpsSW6zHrZOL2K53IupyW3CF5aGwNsokHAiiplHQLx1Skxl54V-S0okcytlVnGIFiSioHSSZCHJvxNElcbtu8DFV6n48zi_gartWTGL3bHngI-tz0tfcOCr3hREwGmFKJEIquZLNCrURWIANlrIgRzXkR7GDr8xrqnl2UuFF3Cfi3D4s81XhHDyUKcqfjYVhu-8n6XrNmFSZV0Rgl73rPyzH3c_c_nGCFcEQDX6D3YwnPibXPq7RhhyBk9tobbYh9sln-bZXMJ33QwSbufE3R7cYlug_VYh6HIweQdOlbM5VWAo5-zwePz6NfD95dAMExHw_Hk4QfeHhI9tp9JcdZ61wPmWipjcrsfiRiiy1XtdO3s3Vx-lHK4MDB76jWkUGutjGOFv-P7YZr3ku7XPPkEZw4ohHk_efboZoemQ4--5MlNmAJmbLjrZPsPPHE5fQ=="
+            >Open in Bitauth IDE &rarr;</a
+          >
+        </section>
+
+        <section>
+          <h4>Part 4</h4>
+          <h2>Bitcoin Cash Covenants</h2>
+        </section>
+
+        <section>
+          <h3>OP_CHECKSIG</h3>
+          <p>
+            <small class="code lock">
+              <span class="bytes">&lt;signature&gt;</span>
+              <span class="bytes">&lt;public_key&gt;</span>
+              <span class="checksig">OP_CHECKSIG</span>
+            </small>
+          </p>
+        </section>
+
+        <section>
+          <h3>OP_CHECKDATASIG</h3>
+          <p>
+            <small class="code lock">
+              <span class="bytes">&lt;signature&gt;</span>
+              <span class="bytes">&lt;message&gt;</span>
+              <span class="bytes">&lt;public_key&gt;</span>
+              <span class="checksig">OP_CHECKDATASIG</span>
+            </small>
+          </p>
+        </section>
+
+        <section>
+          <h3>Covenants</h3>
+          <p class="fragment">
+            Use OP_CHECKSIG and OP_CHECKDATASIG on the same signature to
+            validate other elements of the transaction.
+          </p>
+          <p class="fragment">
+            <small class="code lock">
+              <span class="bytes">&lt;signature&gt;</span>
+              <span class="standard">OP_DUP</span>
+              <span class="bytes">[...]</span>
+              <span class="checksig">OP_CHECKSIG</span>
+              <span class="bytes">[...]</span>
+              <span class="checksig">OP_CHECKDATASIG</span>
+            </small>
+          </p>
+        </section>
+
+        <section>
+          <h3>Demo: CashChannels</h3>
+          <a
+            target="_blank"
+            href="https://ide.bitauth.com/import-gist/ca13abf369b5ecace6437cb86afa331f"
+            >Open in Bitauth IDE &rarr;</a
+          >
+        </section>
+
+        <section>
+          <h3>Questions?</h3>
+          <p><br /></p>
+          <p>
+            Jason Dreyzehner &bullet;
+            <a target="_blank" href="https://twitter.com/bitjson">@bitjson</a>
+          </p>
+          <p><br /></p>
+          <small>
+            <a
+              target="_blank"
+              href="https://gist.github.com/bitjson/ca13abf369b5ecace6437cb86afa331f"
+              >CashChannels GitHub Gist &rarr;</a
+            >
+            <br />
+            <a
+              target="_blank"
+              href="https://blog.bitjson.com/cashchannels-recurring-payments-for-bitcoin-cash-3b274fbfa6e2"
+              >CashChannels Blog Post &rarr;</a
+            >
+            <br />
+            <br />
+            <a target="_blank" href="https://bitauth.com">bitauth.com</a>
+          </small>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        hash: true,
+        // fragmentInURL: true,
+        dependencies: [
+          // { src: 'plugin/markdown/marked.js' },
+          // { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true }
+          // { src: 'plugin/highlight/highlight.js', async: true }
+        ]
+      });
+    </script>
+  </body>
 </html>
